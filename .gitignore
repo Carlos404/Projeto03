@@ -1,3 +1,8 @@
+#Pastas
+nbproject/private/
+build/
+/Projeto03/nbproject/private/
+
 # Compiled class file
 *.class
 
