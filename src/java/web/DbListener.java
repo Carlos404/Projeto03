@@ -3,17 +3,18 @@ package web;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+
 public class DbListener implements ServletContextListener{
-    public static final String JDBCURL = "jdbc:sqlite:C:\\Users\\somat\\quiz.db";
+    public static final String JDBCURL = "jdbc:sqlite:C:\\Users\\somat\\banco\\quiz.db";
     
     public static String exceptionMessage = null;
     
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("Cai sim");
         String step = "Database creation";
         try{
             Class.forName("org.sqlite.JDBC");
@@ -38,6 +39,7 @@ public class DbListener implements ServletContextListener{
                     + "cd_resposta INTEGER PRIMARY KEY,"
                     + "ds_resposta VARCHAR(1000) NOT NULL,"
                     + "cd_pergunta INTEGER NOT NULL,"
+                    + "ic_resposta_correta BOOLEAN NOT NULL,"
                     + "FOREIGN KEY (cd_pergunta) REFERENCES pergunta(cd_pergunta)"
                     + ")");
             
