@@ -4,17 +4,17 @@ package objeto;
 
 public class Usuario {
    
-    private String codigo;
+    private String codigoUsuario;
     private String nome;
     private String login;
     private String senha;
     
-    public String getCodigo() {
-        return codigo;
+    public String getCodigoUsuario() {
+        return codigoUsuario;
     }
 
-    public void setCodigo(String codigo) {
-        this.codigo = codigo;
+    public void setCodigoUsuario(String codigoUsuario) {
+        this.codigoUsuario = codigoUsuario;
     }
 
     public String getNome() {
