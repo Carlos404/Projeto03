@@ -17,7 +17,6 @@
     if(request.getParameter("enviar")!=null){
         try{
             quantidadeAcertos = new ControleQuiz().getResultadoQuiz(teste);
-            //response.sendRedirect(request.getRequestURI());
         }catch(Exception ex){
             requestException = ex;
         }
