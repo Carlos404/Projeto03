@@ -1,77 +1,92 @@
 
 package controle;
 
+import static java.lang.Integer.parseInt;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import objeto.Pergunta;
 import objeto.Resposta;
+import objeto.Teste;
 import web.DbListener;
-
-
+        
 public class ControleQuiz {
     
-//    public static int getReultadoTeste(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
-//        
-//        return verificaQuantidadeAcertos(listaPerguntas, getRespostas(listaPerguntas));
-//    }
+    public static int getResultadoQuiz(Teste quiz) throws ClassNotFoundException, SQLException, SQLException, SQLException{
+        return validaRespostas(quiz);
+    }
     
-    private static int verificaQuantidadeAcertos(ArrayList<Pergunta> listaPerguntas, ArrayList<Resposta> listaRespostas){
+    private static int validaRespostas(Teste quiz) throws ClassNotFoundException, SQLException{
         int quantidadeAcertos = 0;
+        ArrayList<Resposta> respostasCorretas = ControleResposta.buscaRespostasNoBanco(preparaListaPerguntas(quiz.getCodigoPergunta()));
+        List<String> listaRespostasEnviadas = Arrays.asList(quiz.getCodigoResposta().split(","));
+        
+        for(Resposta resposta : respostasCorretas){
+            if(listaRespostasEnviadas.contains(resposta.getCodigoResposta())) quantidadeAcertos++;
+        }
+        
+        insereResultado(quantidadeAcertos,quiz.getCodigoUsuario());
         
         return quantidadeAcertos;
     }
     
-    
-    
-//    public static ArrayList<Resposta> getRespostas(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
-//       ArrayList<Resposta> listaRespostas = new ArrayList<>();
-//       
-//       
-//       String query = "SELECT * FROM resposta where cd_pergunta in ("+substituiValorPorInterrogacao(listaPerguntas)+")";
-//       
-//       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
-//       PreparedStatement stmt = con.prepareStatement(query);
-//       
-//       substituiInterrogacaoPorValor(listaPerguntas, stmt);
-//       
-//       ResultSet rs = stmt.executeQuery();
-//       
-//        while(rs.next()){
-//            Resposta resposta = new Resposta();
-//            
-//            resposta.setCodigoResposta(String.valueOf(rs.getInt("cd_resposta")));
-//            resposta.setResposta(rs.getString("nm_resposta"));
-//            
-//            listaRespostas.add(resposta);
-//        }
-//        
-//        rs.close();
-//        iniciaETerminaConexaoComBanco(false);
-//        
-//        return listaRespostas;
-//    }
-    
-    private static ResultSet executaQuery(Statement stmt, String query) throws SQLException{
-        return stmt.executeQuery(query);
+    private static void insereResultado(int quantidadeAcertos, String codigoUsuario) throws SQLException, ClassNotFoundException{
+        Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+        PreparedStatement stmt = null;
+       
+        codigoUsuario = "1";
+        
+        String query = "INSERT INTO teste values (?,?, ?)";
+        stmt = con.prepareStatement(query);
+
+        stmt.setInt(1, buscaUltimoCodigoTesteInserido()+1);
+        stmt.setInt(2, quantidadeAcertos);
+        stmt.setInt(3, parseInt(codigoUsuario));
+
+        stmt.execute();
+       
+        
+        stmt.close();
+        con.close();
     }
     
-    private static Statement iniciaETerminaConexaoComBanco(boolean inicia) throws ClassNotFoundException, SQLException{
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(DbListener.JDBCURL);
-        Statement stmt =  con.createStatement();
-        
-        if(inicia){
-            return stmt;
-        }else{
-            stmt.close();
-            con.close();
+    private static int buscaUltimoCodigoTesteInserido() throws SQLException, ClassNotFoundException{
+       int ultimoCodigo = 0;
+       
+       String query = "SELECT cd_teste FROM teste order by rowid desc LIMIT 1 ";
+       Class.forName("org.sqlite.JDBC");
+       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+       Statement stmt =  con.createStatement();
+              
+       ResultSet rs = stmt.executeQuery(query);
+       
+        while(rs.next()){
+            ultimoCodigo =  rs.getInt("cd_teste");
         }
         
-        return null;
+        rs.close();
+        stmt.close();
+        con.close();
+        
+        return ultimoCodigo;
+    }
+    
+    private static ArrayList<Pergunta> preparaListaPerguntas(String codigoPerguntas){
+        ArrayList<Pergunta> listaPergunta = new ArrayList<>();
+        
+        for(String codigoPergunta: codigoPerguntas.split(",")){
+            Pergunta pergunta = new Pergunta();
+            pergunta.setCodigoPergunta(codigoPergunta);
+                      
+            listaPergunta.add(pergunta);
+        }
+        
+        return listaPergunta;
     }
 }

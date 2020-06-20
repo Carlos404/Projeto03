@@ -19,21 +19,56 @@ import web.DbListener;
 public class ControleResposta {
     
     public static void verificaSeExisteRespostasCadastradasNoBanco() throws ClassNotFoundException, SQLException{
-        if(buscaRespostasNoBanco().isEmpty()){
+        if(buscaRespostasNoBanco(new ArrayList<>()).isEmpty()){
            insereRespostasNoBanco(); 
         }
     }
     
-    public static ArrayList<Resposta> buscaRespostasNoBanco() throws ClassNotFoundException, SQLException{
-        ArrayList<Resposta> listaRespostas = new ArrayList<>();
-        ArrayList<Pergunta> listaPerguntas = ControlePergunta.buscaPerguntasNoBanco();
-
-        String query = "SELECT * FROM resposta where cd_pergunta in ("+substituiValorPorInterrogacao(listaPerguntas)+")";
+    public static ArrayList<Resposta> buscaAlternativas(String codigoPergunta) throws SQLException, ClassNotFoundException{
+       ArrayList<Resposta> listaAlternativas = new ArrayList<>();
+       
+       String query = "SELECT * FROM resposta where cd_pergunta = ? ";
        
        Connection con = DriverManager.getConnection(DbListener.JDBCURL);
        PreparedStatement stmt = con.prepareStatement(query);
        
-       substituiInterrogacaoPorValor(listaPerguntas, stmt);
+       stmt.setInt(1, Integer.parseInt(codigoPergunta));
+       
+       ResultSet rs = stmt.executeQuery();
+       
+        while(rs.next()){
+            Resposta alternativa = new Resposta();
+            alternativa.setResposta(rs.getString("ds_resposta"));
+            alternativa.setCodigoResposta(String.valueOf(rs.getInt("cd_resposta")));
+            
+            listaAlternativas.add(alternativa);
+        }
+        Collections.shuffle(listaAlternativas);
+        rs.close();
+        iniciaETerminaConexaoComBanco(false);
+        return listaAlternativas;
+    }
+    
+    
+    public static ArrayList<Resposta> buscaRespostasNoBanco(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
+        ArrayList<Resposta> listaRespostas = new ArrayList<>();
+        boolean perguntasPadroes = false;
+        if(listaPerguntas.isEmpty()) {
+            perguntasPadroes = true;
+            listaPerguntas = ControlePergunta.buscaPerguntasNoBanco();
+        }
+
+       StringBuilder query = new StringBuilder("SELECT * FROM resposta where cd_pergunta in (")
+                                               .append(substituiValorPorInterrogacao(listaPerguntas))
+                                               .append(")");
+       
+       if(!perguntasPadroes) query.append(" and ic_resposta_correta = ?");
+       
+       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+       PreparedStatement stmt = con.prepareStatement(query.toString());
+       
+       int j = substituiInterrogacaoPorValor(listaPerguntas, stmt);
+       if(!perguntasPadroes) stmt.setBoolean(j, true);
        
        ResultSet rs = stmt.executeQuery();
        
@@ -41,13 +76,12 @@ public class ControleResposta {
             Resposta resposta = new Resposta();
             
             resposta.setCodigoPergunta(String.valueOf(rs.getInt("cd_pergunta")));
-            resposta.setResposta(rs.getString("nm_resposta"));
+            resposta.setResposta(rs.getString("ds_resposta"));
             resposta.setCodigoResposta(String.valueOf(rs.getInt("cd_resposta")));
             resposta.setRespostaVerdadeiraOuFalsa(rs.getBoolean("ic_resposta_correta"));
             
             listaRespostas.add(resposta);
         }
-        Collections.shuffle(listaRespostas);
         
         rs.close();
         iniciaETerminaConexaoComBanco(false);
@@ -96,12 +130,13 @@ public class ControleResposta {
         return interrogacao.toString();
     }
     
-    private static void substituiInterrogacaoPorValor(ArrayList<Pergunta> lista, PreparedStatement stm) throws SQLException{
+    private static int substituiInterrogacaoPorValor(ArrayList<Pergunta> lista, PreparedStatement stm) throws SQLException{
         int j=1;
         for(int i=0; i<lista.size(); i++){
             stm.setInt(j, Integer.parseInt(lista.get(i).getCodigoPergunta()));
             j++;
         }
+        return j;
     }
     
     private static Statement iniciaETerminaConexaoComBanco(boolean inicia) throws ClassNotFoundException, SQLException{

@@ -7,6 +7,8 @@ public class Teste {
     private String codigoTeste;
     private String codigoUsuario;
     private String resultado;
+    private String codigoPergunta;
+    private String codigoResposta;
     
     public String getCodigoTeste() {
         return codigoTeste;
@@ -32,4 +34,20 @@ public class Teste {
         this.resultado = resultado;
     }
     
+    public String getCodigoPergunta() {
+        return codigoPergunta;
+    }
+
+    public String getCodigoResposta() {
+        return codigoResposta;
+    }
+    
+    public void setCodigoPergunta(String codigoPergunta) {
+        this.codigoPergunta = codigoPergunta;
+    }
+
+    public void setCodigoResposta(String codigoResposta) {
+        this.codigoResposta = codigoResposta;
+    }
+
 }

@@ -34,7 +34,7 @@ public class ControlePergunta {
             Pergunta pergunta = new Pergunta();
             
             pergunta.setCodigoPergunta(String.valueOf(rs.getInt("cd_pergunta")));
-            pergunta.setPergunta(rs.getString("nm_pergunta"));
+            pergunta.setPergunta(rs.getString("ds_pergunta"));
             
             listaPerguntas.add(pergunta);
         }

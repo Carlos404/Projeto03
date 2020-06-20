@@ -19,6 +19,7 @@ if(request.getParameter("entrar") != null){
             errorMessage = "Login ou senha incorretas";
         }else{
             session.setAttribute("usuarioLogin", usuario.getLogin());
+            session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
             session.setAttribute("usuarioNome", usuario.getNome());
             response.sendRedirect(request.getRequestURI());
         }
