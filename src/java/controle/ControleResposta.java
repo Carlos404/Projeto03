@@ -18,9 +18,9 @@ import web.DbListener;
 
 public class ControleResposta {
     
-    public static void verificaSeExisteRespostasCadastradasNoBanco() throws ClassNotFoundException, SQLException{
-        if(buscaRespostasNoBanco(new ArrayList<>()).isEmpty()){
-           insereRespostasNoBanco(); 
+    public static void verificaSeExisteRespostasCadastradas() throws ClassNotFoundException, SQLException{
+        if(buscaRespostas(new ArrayList<>()).isEmpty()){
+           insereRespostas(); 
         }
     }
     
@@ -50,12 +50,12 @@ public class ControleResposta {
     }
     
     
-    public static ArrayList<Resposta> buscaRespostasNoBanco(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
+    public static ArrayList<Resposta> buscaRespostas(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
         ArrayList<Resposta> listaRespostas = new ArrayList<>();
         boolean perguntasPadroes = false;
         if(listaPerguntas.isEmpty()) {
             perguntasPadroes = true;
-            listaPerguntas = ControlePergunta.buscaPerguntasNoBanco();
+            listaPerguntas = ControlePergunta.buscaPerguntas();
         }
 
        StringBuilder query = new StringBuilder("SELECT * FROM resposta where cd_pergunta in (")
@@ -90,7 +90,7 @@ public class ControleResposta {
     }
     
     
-    public static void insereRespostasNoBanco() throws ClassNotFoundException, SQLException{
+    public static void insereRespostas() throws ClassNotFoundException, SQLException{
         List<RespostaEnum> listaRespostas = RespostaEnum.getListaRespostas();
         
         Connection con = DriverManager.getConnection(DbListener.JDBCURL);
@@ -152,9 +152,5 @@ public class ControleResposta {
         }
         
         return null;
-    }
-    
-    private static ResultSet executaQuery(Statement stmt, String query) throws SQLException{
-        return stmt.executeQuery(query);
     }
 }

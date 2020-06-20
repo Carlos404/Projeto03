@@ -36,7 +36,7 @@
                 <input type="hidden" id="quantidade-acertos" value="<%=quantidadeAcertos != -1 ? quantidadeAcertos : -1%>"/>
                 <input type="hidden" id="codigo-usuario"  name="codigoUsuario" value="<%=session.getAttribute("usuarioLogin")%>"/>
                 <%int j = 1;
-                ArrayList<Pergunta> quiz = new ControlePergunta().buscaPerguntasNoBanco();
+                ArrayList<Pergunta> quiz = new ControlePergunta().buscaPerguntas();
                 for(int i=0; i<quiz.size(); i++){%>
                 
                     <span class="font-weight-bold"><%=j%>  - </span>

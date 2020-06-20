@@ -17,13 +17,13 @@ import web.DbListener;
 
 public class ControlePergunta {
     
-    public static void verificaSeExistePerguntasCadastradasNoBanco() throws ClassNotFoundException, SQLException{
-        if(buscaPerguntasNoBanco().isEmpty()){
-           inserePerguntasNoBanco(); 
+    public static void verificaSeExistePerguntasCadastradas() throws ClassNotFoundException, SQLException{
+        if(buscaPerguntas().isEmpty()){
+           inserePerguntas(); 
         }
     }
     
-    public static ArrayList<Pergunta> buscaPerguntasNoBanco() throws ClassNotFoundException, SQLException{
+    public static ArrayList<Pergunta> buscaPerguntas() throws ClassNotFoundException, SQLException{
         
         ArrayList<Pergunta> listaPerguntas = new ArrayList<>();
         
@@ -47,7 +47,7 @@ public class ControlePergunta {
         
     }
     
-    private static void inserePerguntasNoBanco() throws ClassNotFoundException, SQLException{
+    private static void inserePerguntas() throws ClassNotFoundException, SQLException{
         
         List<PerguntaEnum> listaPerguntas = PerguntaEnum.getListaPerguntas();
         

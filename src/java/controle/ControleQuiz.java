@@ -112,7 +112,7 @@ public class ControleQuiz {
     
     private static int validaRespostas(Teste quiz) throws ClassNotFoundException, SQLException{
         int quantidadeAcertos = 0;
-        ArrayList<Resposta> respostasCorretas = ControleResposta.buscaRespostasNoBanco(preparaListaPerguntas(quiz.getCodigoPergunta()));
+        ArrayList<Resposta> respostasCorretas = ControleResposta.buscaRespostas(preparaListaPerguntas(quiz.getCodigoPergunta()));
         List<String> listaRespostasEnviadas = Arrays.asList(quiz.getCodigoResposta().split(","));
         
         for(Resposta resposta : respostasCorretas){

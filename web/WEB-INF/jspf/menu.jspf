@@ -7,8 +7,8 @@
 <%@ page pageEncoding="UTF-8" %>
 <%
 String errorMessage = null;
-new ControlePergunta().verificaSeExistePerguntasCadastradasNoBanco();
-new ControleResposta().verificaSeExisteRespostasCadastradasNoBanco();
+new ControlePergunta().verificaSeExistePerguntasCadastradas();
+new ControleResposta().verificaSeExisteRespostasCadastradas();
 if(request.getParameter("entrar") != null){
     Usuario usuario = new Usuario();
     usuario.setLogin(request.getParameter("login"));
