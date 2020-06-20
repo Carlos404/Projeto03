@@ -54,13 +54,13 @@ public class ControlePergunta {
         Connection con = DriverManager.getConnection(DbListener.JDBCURL);
         
         PreparedStatement stmt = null;
-        
+        int i = 1;
         for(PerguntaEnum pergunta: listaPerguntas){
             
             String query = "INSERT INTO pergunta values (?,?)";
             stmt = con.prepareStatement(query);
             
-            stmt.setInt(1, pergunta.getCodigoPergunta());
+            stmt.setInt(1, i++);
             stmt.setString(2, pergunta.getPergunta());
             
             stmt.execute();

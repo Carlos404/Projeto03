@@ -6,6 +6,7 @@ public class Teste {
 
     private String codigoTeste;
     private String codigoUsuario;
+    private String nomeUsuario;
     private String resultado;
     private String codigoPergunta;
     private String codigoResposta;
@@ -24,6 +25,13 @@ public class Teste {
 
     public void setCodigoUsuario(String codigoUsuario) {
         this.codigoUsuario = codigoUsuario;
+    }
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public void setNomeUsuario(String nomeUsuario) {
+        this.nomeUsuario = nomeUsuario;
     }
 
     public String getResultado() {

@@ -2,6 +2,7 @@
 package controle;
 
 import static java.lang.Integer.parseInt;
+import static java.lang.String.valueOf;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -20,6 +21,93 @@ public class ControleQuiz {
     
     public static int getResultadoQuiz(Teste quiz) throws ClassNotFoundException, SQLException, SQLException, SQLException{
         return validaRespostas(quiz);
+    }
+    
+    public static ArrayList<Teste> getRanking() throws SQLException{
+        ArrayList<Teste> listaTestes = new ArrayList<>();
+       
+       String query = "SELECT t.cd_teste, t.cd_resultado, u.nm_usuario "
+                    + "FROM teste t  "
+                    + "INNER JOIN usuario u where t.cd_usuario = u.rowid  "
+                    + " order by t.cd_resultado desc LIMIT 10;";
+      
+       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+       PreparedStatement stmt = con.prepareStatement(query);
+       
+       ResultSet rs = stmt.executeQuery();
+       
+        while(rs.next()){
+            Teste teste = new Teste();
+            teste.setCodigoTeste(valueOf(rs.getInt("cd_teste")));
+            teste.setResultado(valueOf(rs.getInt("cd_resultado")));
+            teste.setNomeUsuario(rs.getString("nm_usuario"));
+            
+            listaTestes.add(teste);
+        }
+        
+        rs.close();
+        stmt.close();
+        con.close();
+        
+        return listaTestes;
+    }
+    
+    public static ArrayList<Teste> getUltimosTestesRealizadosUsuario(String codigoUsuario) throws ClassNotFoundException, SQLException{
+       ArrayList<Teste> listaTestes = new ArrayList<>();
+       
+       String query = "SELECT * FROM teste where cd_usuario = ? order by rowid desc LIMIT 10";
+      
+       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+       PreparedStatement stmt = con.prepareStatement(query);
+       
+       stmt.setInt(1, Integer.parseInt(codigoUsuario));
+       
+       ResultSet rs = stmt.executeQuery();
+       
+        while(rs.next()){
+            Teste teste = new Teste();
+            teste.setCodigoTeste(valueOf(rs.getInt("cd_teste")));
+            teste.setResultado(valueOf(rs.getInt("cd_resultado")));
+            
+            listaTestes.add(teste);
+        }
+        
+        rs.close();
+        stmt.close();
+        con.close();
+        
+        return listaTestes;
+    }
+    
+    public static ArrayList<Teste> getUltimosTestesRealizados() throws ClassNotFoundException, SQLException{
+       ArrayList<Teste> listaTestes = new ArrayList<>();
+       
+       String query = "SELECT t.cd_teste, t.cd_resultado, u.nm_usuario "
+                    + "FROM teste t  "
+                    + "INNER JOIN usuario u where t.cd_usuario = u.rowid  "
+                    + " order by t.rowid desc LIMIT 10;";
+      
+      
+       Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+       PreparedStatement stmt = con.prepareStatement(query);
+       
+       ResultSet rs = stmt.executeQuery();
+       
+        while(rs.next()){
+            Teste teste = new Teste();
+            
+            teste.setCodigoTeste(valueOf(rs.getInt("cd_teste")));
+            teste.setResultado(valueOf(rs.getInt("cd_resultado")));
+            teste.setNomeUsuario(rs.getString("nm_usuario"));
+            
+            listaTestes.add(teste);
+        }
+        
+        rs.close();
+        stmt.close();
+        con.close();
+        
+        return listaTestes;
     }
     
     private static int validaRespostas(Teste quiz) throws ClassNotFoundException, SQLException{

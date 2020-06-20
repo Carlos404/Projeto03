@@ -29,35 +29,43 @@ if(request.getParameter("entrar") != null){
 }else if(request.getParameter("sair") != null){
     session.removeAttribute("usuarioLogin");
     session.removeAttribute("usuarioNome");
+    session.removeAttribute("usuarioCodigo");
     response.sendRedirect(request.getRequestURI());
 }
 %>
+<html>
+    <head>
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+    </head>
+    <h1>QUIZ</h1>
+    <%if(session.getAttribute("usuarioLogin") == null){%>
+        <form method="post">
 
-<h1>QUIZ</h1>
-<%if(session.getAttribute("usuarioLogin") == null){%>
-    <form method="post">
-       
-        <p>Usuário:</p>
-        <input type="text" name="login" />
-        
-        <p>Senha:</p>   
-        <input type="password" name="senha" />
-        <br/> <br/>
-        <input type="submit" name="entrar" value="Entrar"/>
-        <a href="<%=request.getContextPath()%>/cadastrar-usuario.jsp">Criar conta</a>
-    </form>
-    <%if(errorMessage != null){%>
-    <div style="color:red"><%= errorMessage %></div>
+            <p>Usuário:</p>
+            <input type="text" name="login" />
+
+            <p>Senha:</p>   
+            <input type="password" name="senha" />
+            <br/> <br/>
+            <input type="submit" name="entrar" value="Entrar"/>
+            <a href="<%=request.getContextPath()%>/cadastrar-usuario.jsp">Criar conta</a>
+        </form>
+        <%if(errorMessage != null){%>
+        <div style="color:red"><%= errorMessage %></div>
+        <%}%>
+    <%}else{%>
+        <form>
+            <a href="<%=request.getContextPath()%>/index.jsp">Index</a>
+            | <a href="<%=request.getContextPath()%>/teste.jsp">Realizar teste</a>
+            || Bem vindo, <u><a href="<%=request.getContextPath()%>/perfil.jsp"><%= session.getAttribute("usuarioNome") %></a></u>
+            <input type="submit" name="sair" value="Sair" />
+        </form>
     <%}%>
-<%}else{%>
-    <form>
-        <a href="<%=request.getContextPath()%>/index.jsp">Index</a>
-        | <a href="<%=request.getContextPath()%>/teste.jsp">Realizar teste</a>
-        || Bem vindo, <u><a href="<%=request.getContextPath()%>/perfil.jsp"><%= session.getAttribute("usuarioNome") %></a></u>
-        <input type="submit" name="sair" value="Sair" />
-    </form>
-<%}%>
-<%if(DbListener.exceptionMessage != null){%>
-<h3 style="color:red"><%= DbListener.exceptionMessage %></h3>
-<%}%>
-<hr/>
+    <%if(DbListener.exceptionMessage != null){%>
+    <h3 style="color:red"><%= DbListener.exceptionMessage %></h3>
+    <%}%>
+    <hr/>
+</html>
