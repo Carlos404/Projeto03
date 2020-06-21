@@ -4,35 +4,37 @@
 <%@page import="controle.ControleUsuario"%>
 <%@page import="objeto.Usuario"%>
 <%@page import="web.DbListener"%>
-<%@ page pageEncoding="UTF-8" %>
+<%@ page pageEncoding="UTF-8"%>
 <%
-String errorMessage = null;
-new ControlePergunta().verificaSeExistePerguntasCadastradas();
-new ControleResposta().verificaSeExisteRespostasCadastradas();
-if(request.getParameter("entrar") != null){
-    Usuario usuario = new Usuario();
-    usuario.setLogin(request.getParameter("login"));
-    usuario.setSenha(request.getParameter("senha"));
-    try{
-        usuario = new ControleUsuario().login(usuario);
-        if(usuario == null){
-            errorMessage = "Login ou senha incorretas";
-        }else{
-            session.setAttribute("usuarioLogin", usuario.getLogin());
-            session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
-            session.setAttribute("usuarioNome", usuario.getNome());
-            response.sendRedirect(request.getRequestURI());
-        }
-    }catch(Exception ex){
-        errorMessage = ex.getMessage();
-    }
-}else if(request.getParameter("sair") != null){
-    session.removeAttribute("usuarioLogin");
-    session.removeAttribute("usuarioNome");
-    session.removeAttribute("usuarioCodigo");
-    response.sendRedirect(request.getRequestURI());
-}
+	String errorMessage = null;
+	new ControlePergunta().verificaSeExistePerguntasCadastradasNoBanco();
+	new ControleResposta().verificaSeExisteRespostasCadastradasNoBanco();
+
+	if (request.getParameter("entrar") != null) {
+
+		String login = request.getParameter("login");
+		String senha = request.getParameter("senha");
+
+		try {
+			Usuario usuario = ControleUsuario.getUsuario(login, senha);
+			if (usuario == null) {
+				errorMessage = "Login ou senha incorretas";
+			} else {
+				session.setAttribute("usuarioLogin", usuario.getLogin());
+				session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
+				session.setAttribute("usuarioNome", usuario.getNome());
+				response.sendRedirect(request.getRequestURI());
+			}
+		} catch (Exception ex) {
+			errorMessage = ex.getMessage();
+		}
+	} else if (request.getParameter("sair") != null) {
+		session.removeAttribute("usuarioLogin");
+		session.removeAttribute("usuarioNome");
+		response.sendRedirect(request.getRequestURI());
+	}
 %>
+
 <html>
     <head>
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" crossorigin="anonymous"></script>
