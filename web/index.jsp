@@ -17,21 +17,24 @@
         <%}%>
         <%if(session.getAttribute("usuarioLogin") != null){%>
         <p>Sua média é: <%=new ControleUsuario().getMediaUsuario(session.getAttribute("usuarioCodigo").toString())%> </p>
-        <p>Últimos testes realizados</p>
-        <table border="1">
-            <tr>
-                <th>Código do teste</th>
-                <th>Quantidade de acertos</th>
-            </tr>
-        <% ArrayList<Teste> listaTestes = new ControleQuiz().getUltimosTestesRealizadosUsuario(session.getAttribute("usuarioCodigo").toString());
-           for(Teste teste : listaTestes){%>
+        <p class="text-center" >Últimos testes realizados</p>
+        <div class="container">
+        
+            <table border="1" class=" table table-stripped table-bordered">
                 <tr>
-                   <td><%=teste.getCodigoTeste()%></td>  
-                   <td><%=teste.getResultado()%></td>  
+                    <th>Código do teste</th>
+                    <th>Quantidade de acertos</th>
                 </tr>
+            <% ArrayList<Teste> listaTestes = new ControleQuiz().getUltimosTestesRealizadosUsuario(session.getAttribute("usuarioCodigo").toString());
+               for(Teste teste : listaTestes){%>
+                    <tr>
+                       <td><%=teste.getCodigoTeste()%></td>  
+                       <td><%=teste.getResultado()%></td>  
+                    </tr>
+                <%}%>
+            </table>
             <%}%>
-        </table>
-        <%}%>
+        </div>
         <hr/>
         <div class="container">
         <div class="row">
@@ -52,7 +55,7 @@
         </table>
         </div>
         <div class="col-6 justify-content-center">
-            <p class="text-center">Ultimos testes realizados</p>
+            <p class="text-center">Ultimos testes realizados - Geral</p>
         <table class="table table-stripped table-bordered">
             <tr>
                 <th>Usuário</th>

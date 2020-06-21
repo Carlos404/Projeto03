@@ -9,28 +9,18 @@
 	String errorMessage = null;
 	new ControlePergunta().verificaSeExistePerguntasCadastradas();
 	new ControleResposta().verificaSeExisteRespostasCadastradas();
-
+        
 	if (request.getParameter("entrar") != null) {
-		String login = request.getParameter("login");
-		String senha = request.getParameter("senha");
-
-		try {
-			Usuario usuario = ControleUsuario.getUsuario(login, senha);
-			if (usuario == null) {
-				errorMessage = "Login ou senha incorretas";
-			} else {
-				session.setAttribute("usuarioLogin", usuario.getLogin());
-				session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
-				session.setAttribute("usuarioNome", usuario.getNome());
-				response.sendRedirect(request.getRequestURI());
-			}
-		} catch (Exception ex) {
-			errorMessage = ex.getMessage();
-		}
+            
+            session.setAttribute("usuarioLogin", "matheus");
+            session.setAttribute("usuarioCodigo", "1");
+            session.setAttribute("usuarioNome", "Matheus");
+            
 	} else if (request.getParameter("sair") != null) {
-		session.removeAttribute("usuarioLogin");
-		session.removeAttribute("usuarioNome");
-		response.sendRedirect(request.getRequestURI());
+            session.removeAttribute("usuarioLogin");
+            session.removeAttribute("usuarioCodigo");
+            session.removeAttribute("usuarioNome");
+            response.sendRedirect(request.getRequestURI());
 	}
 %>
 
