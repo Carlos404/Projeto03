@@ -66,7 +66,6 @@ public class ControleUsuario {
 		stmt.close();
 		con.close();
 	}
-
 	public static String getMediaUsuario(String codigoUsuario) throws ClassNotFoundException, SQLException {
 		ArrayList<Teste> testesRealizados = ControleQuiz.getUltimosTestesRealizadosUsuario(codigoUsuario);
 		double somaTotalAcertos = 0;
