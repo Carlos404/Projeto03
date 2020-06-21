@@ -17,6 +17,7 @@
     if(request.getParameter("enviar")!=null){
         try{
             quantidadeAcertos = new ControleQuiz().getResultadoQuiz(teste);
+            //response.sendRedirect(request.getRequestURI());
         }catch(Exception ex){
             requestException = ex;
         }
@@ -27,20 +28,23 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Realize o teste!</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     </head>
     <body>
-        <%@include file="WEB-INF/jspf/menu.jspf" %>
+        <div class="container">
+        <h1>Realize o teste e veja quantas questões você acerta!</h1>
+        <hr>
         <%if(session.getAttribute("usuarioLogin") != null){%>
-            <h1>Realize o teste e veja quantas questões você acerta!</h1>
-            <form id="form-quiz">
+            <form>
                 <input type="hidden" id="quantidade-acertos" value="<%=quantidadeAcertos != -1 ? quantidadeAcertos : -1%>"/>
                 <input type="hidden" id="codigo-usuario"  name="codigoUsuario" value="<%=session.getAttribute("usuarioLogin")%>"/>
                 <%int j = 1;
-                ArrayList<Pergunta> quiz = new ControlePergunta().buscaPerguntas();
+                ArrayList<Pergunta> quiz = new ControlePergunta().buscaPerguntasNoBanco();
                 for(int i=0; i<quiz.size(); i++){%>
                 
-                    <span class="font-weight-bold"><%=j%>  - </span>
-                    <span class="font-weight-bold"><%=quiz.get(i).getPergunta()%></span><br/><br/>
+                    <span class="font-weight-bold"><%=j%>.)</span>    
+                    
+                    <span class="font-weight-bold"><%=quiz.get(i).getPergunta()%></span><br/>
                     
                     <%ArrayList<Resposta> alternativas = new ControleResposta().buscaAlternativas(quiz.get(i).getCodigoPergunta());
                     
@@ -50,38 +54,16 @@
                          <%=alternativa.getResposta()%>
                          <br/>
                     <%}%>
-                    <hr/>
                     <%j++;%>
-                    
+                    <br/><br/>
                 <%}%>
-                
-                <button type="button" class="btn btn-primary d-none" data-toggle="modal" id="botao-alert" data-target="#modal-alerta-quantidade-acertos"></button>
-
-                <div class="modal fade" id="modal-alerta-quantidade-acertos" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                      <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Resultado</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div class="modal-body">
-                          <span>Você acertou <%=quantidadeAcertos%> questões do quiz</span>
-                      </div>
-                      <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="confirma-quantidade-acertos">Ok</button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                      
                 <input type="hidden" name="codigos-perguntas" id="codigos-perguntas" />
                 <input type="hidden" name="codigos-respostas" id="codigos-respostas" />
-                <button type="button" class="btn btn-primary" id="enviar-respostas" value="enviar">Enviar</button>
-                <input type="submit" name="enviar"  style="display:none" id="submitar-form" value="enviar" />
+                <button type="button" id="enviar-respostas">Enviar</button>
+                <input type="submit" name="enviar" value="Enviar"/>
             </form>
         <%}%>
+        </div>
     </body>
 </html>
 
@@ -93,17 +75,9 @@
 
     function mostraQuantidadeAcertos(){
         if(document.getElementById("quantidade-acertos").value !== '-1'){
-            adicionaClickConfirmaQuantidadeAcertos();
-            document.getElementById("botao-alert").click();
+            alert(document.getElementById("quantidade-acertos").value);
         }
     }
-    
-    function adicionaClickConfirmaQuantidadeAcertos(){
-        document.getElementById("confirma-quantidade-acertos").addEventListener("click", function(){
-             window.location.href="index.jsp";
-        });
-    }
-    
     function aplicaClickBotaoEnviar(){
         let botaoEnviar = document.getElementById("enviar-respostas");
         
@@ -119,24 +93,17 @@
             codigoPergunta : [] ,
             codigoResposta : []
         };
-        let contador=0;
         let j =0;
         for(i = 0; i < respostas.length; i++) { 
             if(respostas[i].checked) {
                 teste.codigoResposta[j] = respostas[i].value.split("-")[0];
                 teste.codigoPergunta[j] = respostas[i].value.split("-")[1];
-                contador++;
                 j++;
                 
             }
         }
-        if(teste.codigoResposta.length === 10){
-            document.getElementById("codigos-respostas").value = teste.codigoResposta; 
-            document.getElementById("codigos-perguntas").value = teste.codigoPergunta;
-            document.getElementById("submitar-form").click();
-        }else{
-            alert("Responda todas as questões para continuar");
-        }
+        document.getElementById("codigos-respostas").value = teste.codigoResposta; 
+        document.getElementById("codigos-perguntas").value = teste.codigoPergunta; 
     }
 
 </script>

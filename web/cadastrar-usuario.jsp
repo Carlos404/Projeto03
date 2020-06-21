@@ -10,16 +10,16 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Cadastrar usuario</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     </head>
     <body>
         <div class="container">
             <center>
             <h1>Criar conta</h1>
-            <form action="action" class="col-4">
-                <p class="font-weight-bold">Usuário:</p>
+            <form action="action" class="col-4 form-group">
+                <p class="font-weight-bold form-group">Usuário:</p>
                 <input type="text" name="login" class="form-control">
-                <p class="font-weight-bold">Senha:</p>
+                <p class="font-weight-bold form-group">Senha:</p>
                 <input type="password" name="senha" class="form-control">
                 <input type="submit" name="cadastrar" value="Cadastrar" class="form-control mt-2 mb-2 btn btn-primary">
                 <a href="index.jsp" class="form-control btn btn-primary">Voltar</a>
