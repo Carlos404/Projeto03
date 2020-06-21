@@ -7,11 +7,10 @@
 <%@ page pageEncoding="UTF-8"%>
 <%
 	String errorMessage = null;
-	new ControlePergunta().verificaSeExistePerguntasCadastradasNoBanco();
-	new ControleResposta().verificaSeExisteRespostasCadastradasNoBanco();
+	new ControlePergunta().verificaSeExistePerguntasCadastradas();
+	new ControleResposta().verificaSeExisteRespostasCadastradas();
 
 	if (request.getParameter("entrar") != null) {
-
 		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
 
@@ -69,5 +68,4 @@
     <%if(DbListener.exceptionMessage != null){%>
     <h3 style="color:red"><%= DbListener.exceptionMessage %></h3>
     <%}%>
-    <hr/>
 </html>

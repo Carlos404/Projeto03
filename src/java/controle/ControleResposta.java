@@ -48,8 +48,7 @@ public class ControleResposta {
         iniciaETerminaConexaoComBanco(false);
         return listaAlternativas;
     }
-    
-    
+
     public static ArrayList<Resposta> buscaRespostas(ArrayList<Pergunta> listaPerguntas) throws ClassNotFoundException, SQLException{
         ArrayList<Resposta> listaRespostas = new ArrayList<>();
         boolean perguntasPadroes = false;
