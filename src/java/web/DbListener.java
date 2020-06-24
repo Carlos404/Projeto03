@@ -9,7 +9,7 @@ import javax.servlet.ServletContextListener;
 
 
 public class DbListener implements ServletContextListener{
-    public static final String JDBCURL = "jdbc:sqlite:C:\\Users\\somat\\banco\\quiz.db";
+    public static final String JDBCURL = "jdbc:sqlite:C:\\sqlite3\\quiz.db";
     
     public static String exceptionMessage = null;
     

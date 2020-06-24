@@ -1,4 +1,3 @@
-
 package controle;
 
 import static java.lang.Integer.parseInt;
@@ -17,15 +16,16 @@ import web.DbListener;
 
 public class ControleUsuario {
 
-	public static ArrayList<Usuario> login(Usuario usuario) throws Exception {
-
+	public static ArrayList<Usuario> listaUsuarios() throws Exception {
 		ArrayList<Usuario> list = new ArrayList<>();
 		Class.forName("org.sqlite.JDBC");
 		Connection con = DriverManager.getConnection(DbListener.JDBCURL);
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT * FROM usuario");
+
 		while (rs.next()) {
-			list.add(new Usuario(rs.getString("nome"), rs.getString("login"), rs.getString("senha")));
+			list.add(new Usuario(rs.getString("nm_nome"),
+                                rs.getString("nm_login_usuario")));
 		}
 		rs.close();
 		stmt.close();
@@ -33,48 +33,48 @@ public class ControleUsuario {
 		return list;
 	}
 
-	public static Usuario getUsuario(String login, String senha) throws Exception {
+	public static Usuario getUsuario(String nm_login_usuario, String cd_senha_hash) throws Exception {
 		Usuario usuario = null;
 		Class.forName("org.sqlite.JDBC");
 		Connection con = DriverManager.getConnection(DbListener.JDBCURL);
 		String SQL = "SELECT * FROM usuario WHERE nm_login_usuario=? AND cd_senha_hash=?";
 		PreparedStatement stmt = con.prepareStatement(SQL);
-		stmt.setString(1, login);
-		stmt.setLong(2, senha.hashCode());
+		stmt.setString(1, nm_login_usuario);
+		stmt.setLong(2, cd_senha_hash.hashCode());
 		ResultSet rs = stmt.executeQuery();
 		if (rs.next()) {
-			usuario.setLogin(rs.getString("nm_login_usuario"));
-			usuario.setNome(rs.getString("nm_usuario"));
-			usuario.setSenha(rs.getString("cd_senha_hash"));
-		} else {
 
+			usuario = new Usuario(rs.getString("nm_usuario"), rs.getString("nm_login_usuario"));
 		}
+
 		rs.close();
 		stmt.close();
 		con.close();
+
 		return usuario;
 	}
-	
-	public static void setUsuario(String nome, String login, String senha) throws Exception{
-        Class.forName("org.sqlite.JDBC");
-        Connection con = DriverManager.getConnection(DbListener.JDBCURL);
-        String SQL = "INSERT INTO usuario(nm_usuario, nm_login_usuario, cd_senha_hash) VALUES(?,?,?)";
-        PreparedStatement stmt = con.prepareStatement(SQL);
-        stmt.setString(1, nome);
-        stmt.setString(2, login);
-        stmt.setLong(3, senha.hashCode());
-        stmt.execute();
-        stmt.close();
-        con.close();
-    }
-    public static String getMediaUsuario(String codigoUsuario) throws ClassNotFoundException, SQLException{
-        ArrayList<Teste> testesRealizados = ControleQuiz.getUltimosTestesRealizadosUsuario(codigoUsuario);
-        double somaTotalAcertos = 0;
-        DecimalFormat df = new DecimalFormat("#.00");
-        
-        for(Teste teste: testesRealizados){
-            somaTotalAcertos = somaTotalAcertos + parseInt(teste.getResultado());
-        }
-        return df.format(somaTotalAcertos/testesRealizados.size());
-    }
+
+	public static void setUsuario(String nm_usuario, String nm_login_usuario, String cd_senha_hash) throws Exception {
+		Class.forName(DbListener.JDBCURL);
+		Connection con = DriverManager.getConnection(DbListener.JDBCURL);
+		String SQL = "INSERT INTO usuario(nm_usuario, nm_login_usuario, cd_senha_hash) VALUES(?,?,?)";
+		PreparedStatement stmt = con.prepareStatement(SQL);
+		stmt.setString(1, nm_usuario);
+		stmt.setString(2, nm_login_usuario);
+		stmt.setLong(3, cd_senha_hash.hashCode());
+		stmt.execute();
+		stmt.close();
+		con.close();
+	}
+
+	public static String getMediaUsuario(String codigoUsuario) throws ClassNotFoundException, SQLException {
+		ArrayList<Teste> testesRealizados = ControleQuiz.getUltimosTestesRealizadosUsuario(codigoUsuario);
+		double somaTotalAcertos = 0;
+		DecimalFormat df = new DecimalFormat("#.00");
+
+		for (Teste teste : testesRealizados) {
+			somaTotalAcertos = somaTotalAcertos + parseInt(teste.getResultado());
+		}
+		return df.format(somaTotalAcertos / testesRealizados.size());
+	}
 }

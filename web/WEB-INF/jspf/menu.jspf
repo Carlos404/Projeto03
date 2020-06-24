@@ -7,20 +7,30 @@
 <%@ page pageEncoding="UTF-8"%>
 <%
 	String errorMessage = null;
-	new ControlePergunta().verificaSeExistePerguntasCadastradas();
-	new ControleResposta().verificaSeExisteRespostasCadastradas();
-        
+
 	if (request.getParameter("entrar") != null) {
-            
-            session.setAttribute("usuarioLogin", "matheus");
-            session.setAttribute("usuarioCodigo", "1");
-            session.setAttribute("usuarioNome", "Matheus");
-            
+
+		String login = request.getParameter("login");
+		String senha = request.getParameter("senha");
+
+		try {
+			Usuario usuario = ControleUsuario.getUsuario(login, senha);
+			if (usuario == null) {
+				errorMessage = "Login ou senha incorretas";
+				
+			} else {
+				session.setAttribute("usuarioLogin", usuario.getLogin());
+				session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
+				session.setAttribute("usuarioNome", usuario.getNome());
+				response.sendRedirect(request.getRequestURI());
+			}
+		} catch (Exception ex) {
+			errorMessage = ex.getMessage();
+		}
 	} else if (request.getParameter("sair") != null) {
-            session.removeAttribute("usuarioLogin");
-            session.removeAttribute("usuarioCodigo");
-            session.removeAttribute("usuarioNome");
-            response.sendRedirect(request.getRequestURI());
+		session.removeAttribute("usuarioLogin");
+		session.removeAttribute("usuarioNome");
+		response.sendRedirect(request.getRequestURI());
 	}
 %>
 
@@ -58,4 +68,5 @@
     <%if(DbListener.exceptionMessage != null){%>
     <h3 style="color:red"><%= DbListener.exceptionMessage %></h3>
     <%}%>
+    <hr/>
 </html>
