@@ -5,7 +5,9 @@
 <%@page import="objeto.Usuario"%>
 <%@page import="web.DbListener"%>
 <%@ page pageEncoding="UTF-8"%>
-<%
+<%      
+        new ControlePergunta().verificaSeExistePerguntasCadastradas();
+	new ControleResposta().verificaSeExisteRespostasCadastradas();
 	String errorMessage = null;
 
 	if (request.getParameter("entrar") != null) {

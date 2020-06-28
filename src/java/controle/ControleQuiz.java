@@ -127,8 +127,6 @@ public class ControleQuiz {
     private static void insereResultado(int quantidadeAcertos, String codigoUsuario) throws SQLException, ClassNotFoundException{
         Connection con = DriverManager.getConnection(DbListener.JDBCURL);
         PreparedStatement stmt = null;
-       
-        codigoUsuario = "1";
         
         String query = "INSERT INTO teste values (?,?, ?)";
         stmt = con.prepareStatement(query);
