@@ -29,7 +29,7 @@ public class ControleQuiz {
        String query = "SELECT t.cd_teste, t.cd_resultado, u.nm_usuario "
                     + "FROM teste t  "
                     + "INNER JOIN usuario u where t.cd_usuario = u.rowid  "
-                    + " order by t.cd_resultado desc LIMIT 10;";
+                    + " order by t.cd_resultado desc, t.rowid desc  LIMIT 10;";
       
        Connection con = DriverManager.getConnection(DbListener.JDBCURL);
        PreparedStatement stmt = con.prepareStatement(query);

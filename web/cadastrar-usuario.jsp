@@ -11,8 +11,8 @@ if (request.getParameter("cadastrar") != null) {
     String nm_login_usuario = request.getParameter("login");
     String cd_senha_hash = request.getParameter("senha");
     try {
-        ControleUsuario.setUsuario(nm_usuario, nm_login_usuario, cd_senha_hash);
-        response.sendRedirect("profile.jsp");
+        new ControleUsuario().setUsuario(nm_usuario, nm_login_usuario, cd_senha_hash);
+        response.sendRedirect("index.jsp");
         session.setAttribute("user.name", nm_usuario);
         session.setAttribute("user.login", nm_login_usuario);
     } catch (Exception e) {
@@ -31,14 +31,14 @@ if (request.getParameter("cadastrar") != null) {
         <div class="container">
             <center>
             <h1>Criar conta</h1>
-            <form method="post" class="col-4 form-group">
+            <form class="col-4 form-group">
             <p class="font-weight-bold form-group">Nome:</p>
                 <input type="text" name="nome" class="form-control">
                 <p class="font-weight-bold form-group">Usuário:</p>
                 <input type="text" name="login" class="form-control">
                 <p class="font-weight-bold form-group">Senha:</p>
                 <input type="password" name="senha" class="form-control">
-                <input type="submit" name="cadastrar" class="form-control mt-2 mb-2 btn btn-primary">
+                <input type="submit" name="cadastrar" value="Cadastrar" class="form-control mt-2 mb-2 btn btn-primary"/>
                 <a href="index.jsp" class="form-control btn btn-primary">Voltar</a>
             </form>
             </center>

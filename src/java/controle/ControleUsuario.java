@@ -34,17 +34,19 @@ public class ControleUsuario {
 	}
 
 	public static Usuario getUsuario(String nm_login_usuario, String cd_senha_hash) throws Exception {
-		Usuario usuario = null;
+		Usuario usuario = new Usuario();
 		Class.forName("org.sqlite.JDBC");
 		Connection con = DriverManager.getConnection(DbListener.JDBCURL);
-		String SQL = "SELECT * FROM usuario WHERE nm_login_usuario=? AND cd_senha_hash=?";
+		String SQL = "SELECT rowid, nm_usuario, nm_login_usuario FROM usuario WHERE nm_login_usuario=? AND cd_senha_hash=?";
 		PreparedStatement stmt = con.prepareStatement(SQL);
 		stmt.setString(1, nm_login_usuario);
 		stmt.setLong(2, cd_senha_hash.hashCode());
 		ResultSet rs = stmt.executeQuery();
+                
 		if (rs.next()) {
-
-			usuario = new Usuario(rs.getString("nm_usuario"), rs.getString("nm_login_usuario"));
+                    usuario.setNome(rs.getString("nm_usuario"));
+                    usuario.setLogin(rs.getString("nm_login_usuario"));
+                    usuario.setCodigoUsuario(String.valueOf(rs.getInt("rowid")));
 		}
 
 		rs.close();
@@ -55,14 +57,15 @@ public class ControleUsuario {
 	}
 
 	public static void setUsuario(String nm_usuario, String nm_login_usuario, String cd_senha_hash) throws Exception {
-		Class.forName(DbListener.JDBCURL);
 		Connection con = DriverManager.getConnection(DbListener.JDBCURL);
 		String SQL = "INSERT INTO usuario(nm_usuario, nm_login_usuario, cd_senha_hash) VALUES(?,?,?)";
 		PreparedStatement stmt = con.prepareStatement(SQL);
-		stmt.setString(1, nm_usuario);
+		
+                stmt.setString(1, nm_usuario);
 		stmt.setString(2, nm_login_usuario);
 		stmt.setLong(3, cd_senha_hash.hashCode());
-		stmt.execute();
+		
+                stmt.execute();
 		stmt.close();
 		con.close();
 	}
@@ -74,6 +77,6 @@ public class ControleUsuario {
 		for (Teste teste : testesRealizados) {
 			somaTotalAcertos = somaTotalAcertos + parseInt(teste.getResultado());
 		}
-		return df.format(somaTotalAcertos / testesRealizados.size());
+		return df.format(somaTotalAcertos / testesRealizados.size()).equals("NaN") ? "0" : df.format(somaTotalAcertos / testesRealizados.size());
 	}
 }

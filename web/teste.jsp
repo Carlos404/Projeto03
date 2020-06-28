@@ -35,7 +35,7 @@
             <h1>Realize o teste e veja quantas questões você acerta!</h1>
             <form id="form-quiz">
                 <input type="hidden" id="quantidade-acertos" value="<%=quantidadeAcertos != -1 ? quantidadeAcertos : -1%>"/>
-                <input type="hidden" id="codigo-usuario"  name="codigoUsuario" value="<%=session.getAttribute("usuarioLogin")%>"/>
+                <input type="hidden" id="codigo-usuario"  name="codigoUsuario" value="<%=session.getAttribute("usuarioCodigo")%>"/>
                 <%int j = 1;
                 ArrayList<Pergunta> quiz = new ControlePergunta().buscaPerguntas();
                 for(int i=0; i<quiz.size(); i++){%>
