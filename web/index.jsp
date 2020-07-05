@@ -17,6 +17,7 @@
         <%}%>
         <%if(session.getAttribute("usuarioLogin") != null){%>
         <p>Sua média é: <%=new ControleUsuario().getMediaUsuario(session.getAttribute("usuarioCodigo").toString())%> </p>
+        
         <p class="text-center" >Últimos testes realizados</p>
         <div class="container">
         

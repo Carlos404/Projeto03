@@ -1,3 +1,5 @@
+<%@page import="controle.ControleResposta"%>
+<%@page import="controle.ControlePergunta"%>
 <%@page import="controle.ControleUsuario"%>
 <%@page import="objeto.Usuario"%>
 <%@page import="web.DbListener"%>
@@ -20,6 +22,36 @@ if (request.getParameter("cadastrar") != null) {
     }
 }
 %>
+
+<%      
+        new ControlePergunta().verificaSeExistePerguntasCadastradas();
+	new ControleResposta().verificaSeExisteRespostasCadastradas();
+
+	if (request.getParameter("entrar") != null) {
+
+		String login = request.getParameter("login");
+		String senha = request.getParameter("senha");
+
+		try {
+			Usuario usuario = ControleUsuario.getUsuario(login, senha);
+			if (usuario == null) {
+				errorMessage = "Login ou senha incorretas";
+				
+			} else {
+				session.setAttribute("usuarioLogin", usuario.getLogin());
+				session.setAttribute("usuarioCodigo", usuario.getCodigoUsuario());
+				session.setAttribute("usuarioNome", usuario.getNome());
+				response.sendRedirect(request.getRequestURI());
+			}
+		} catch (Exception ex) {
+			errorMessage = ex.getMessage();
+		}
+	} else if (request.getParameter("sair") != null) {
+		session.removeAttribute("usuarioLogin");
+		session.removeAttribute("usuarioNome");
+		response.sendRedirect(request.getRequestURI());
+	}
+%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -28,6 +60,7 @@ if (request.getParameter("cadastrar") != null) {
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
     </head>
     <body>
+        <%@include file="WEB-INF/jspf/navbar.jspf" %>
         <div class="container">
             <center>
             <h1>Criar conta</h1>
