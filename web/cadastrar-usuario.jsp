@@ -31,7 +31,8 @@ if (request.getParameter("cadastrar") != null) {
 
 		String login = request.getParameter("login");
 		String senha = request.getParameter("senha");
-
+                String redirectURL = "index.jsp";
+		response.sendRedirect(redirectURL);
 		try {
 			Usuario usuario = ControleUsuario.getUsuario(login, senha);
 			if (usuario == null) {
@@ -49,7 +50,8 @@ if (request.getParameter("cadastrar") != null) {
 	} else if (request.getParameter("sair") != null) {
 		session.removeAttribute("usuarioLogin");
 		session.removeAttribute("usuarioNome");
-		response.sendRedirect(request.getRequestURI());
+		String redirectURL = "index.jsp";
+		response.sendRedirect(redirectURL);
 	}
 %>
 <!DOCTYPE html>
